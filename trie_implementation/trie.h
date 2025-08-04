@@ -10,6 +10,7 @@ class TrieNode {
 public:
     unordered_map<char, TrieNode*> children;
     bool end_word;
+    vector<string> states;
 
     TrieNode() : end_word(false) {}
 
@@ -37,10 +38,8 @@ public:
         delete root;
     }
 
-    void insert(string& word);
-
-    bool search(string& word);
-
+    void insert(string& word, string& state);
+    bool search(string& word, vector<string>& states_outgoing);
     bool hasPrefix(string& prefix);
 };
 

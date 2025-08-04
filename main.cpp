@@ -7,6 +7,7 @@
 #include <algorithm> 
 #include <functional>
 #include "hashmap_implementation/HashMap.h"
+#include "trie_implementation/trie.h"
 
 struct CountyData {
     std::string countyName;
@@ -147,6 +148,68 @@ int main() {
     }
     
     countyMap.printStats();
+
+    //
+    // Trie Performance
+    //
+
+    std::cout << "\n--- Trie Performance ---" << std::endl;
+    Trie countyTrie;
+
+    std::cout << "Testing insertion..." << std::endl;
+    auto start_trie_time = std::chrono::high_resolution_clock::now();
+    for (auto& row : dataset)
+    {
+        countyTrie.insert(row.countyName, row.stateName);
+    }
+    auto end_trie_time = std::chrono::high_resolution_clock::now();
+    auto duration_trie_insert = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
+    std::cout << "Total Insertion Time: " << duration_trie_insert.count() << " ms" << std::endl;
+    std::cout << "Average Insertion Time: " << (double)duration_trie_insert.count() / dataset.size() << " ms" << std::endl;
+
+
+
+
+
+    std::cout << "\nTesting Search (Prefix Search and Full countyName search)..." << std::endl;
+    std::string full_key = "Monroe County";
+    std::vector<std::string> states_found;
+
+    //full key search
+    start_trie_time = std::chrono::high_resolution_clock::now();
+    bool trie_found_fullkey = countyTrie.search(full_key, states_found);
+    end_trie_time = std::chrono::high_resolution_clock::now();
+    auto duration_trie_search_fullkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
+    std::cout << "Total Fullkey Search Time " << duration_trie_search_fullkey.count() << " ms " << std::endl;
+    if (trie_found_fullkey)
+    {
+        std::cout << "Found " << full_key << " in States: ";
+        for (auto& state : states_found)
+        {
+            std::cout << state << ", ";
+        }
+    }
+    else
+    {
+        std::cout << "Not Found: " << full_key << std::endl;
+    }
+    //prefix key search
+    std::string prefix_key = "Mon";
+    start_trie_time = std::chrono::high_resolution_clock::now();
+    bool trie_found_prefixkey = countyTrie.hasPrefix(prefix_key);
+    end_trie_time = std::chrono::high_resolution_clock::now();
+    auto duration_trie_search_prefixkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
+    std::cout << "\nTotal Prefixkey Search Time " << duration_trie_search_prefixkey.count() << " ms " << std::endl;
+    if (trie_found_prefixkey)
+    {
+        std::cout << "Found " << prefix_key << std::endl;
+    }
+    else
+    {
+        std::cout << "Not Found: " << prefix_key << std::endl;
+    }
+
+
 
     return 0;
 }
