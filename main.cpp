@@ -65,6 +65,90 @@ std::vector<CountyData> loadData(const std::string& filename) {
     return data;
 }
 
+
+
+
+//
+// Trie Functions
+//
+
+//Inserts CSV Data into a new Trie
+Trie useTrie(std::vector<CountyData>& dataset)
+{
+    Trie countyTrie;
+    std::cout << "Inserting..." << std::endl;
+
+    auto start_trie_time = std::chrono::high_resolution_clock::now();
+    for (auto& row : dataset)
+    {
+        countyTrie.insert(row.countyName, row.stateName);
+    }
+    auto end_trie_time = std::chrono::high_resolution_clock::now();
+
+    auto duration_trie_insert = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
+    std::cout << "Total Insertion Time: " << duration_trie_insert.count() << " ms" << std::endl;
+    std::cout << "Average Insertion Time: " << (double)duration_trie_insert.count() / dataset.size() << " ms" << std::endl;
+
+    return countyTrie;
+}
+
+//Takes in a Trie and county name, returns T/F depending on result of exact search
+void trieExactSearch(Trie& countyTrie, std::string& county_name)
+{
+    std::vector<std::string> states_found;
+    std::cout << "Exact Searching..." << std::endl;
+
+    auto start_trie_time = std::chrono::high_resolution_clock::now();
+    bool found = countyTrie.searchFull(county_name, states_found);
+    auto end_trie_time = std::chrono::high_resolution_clock::now();
+    auto duration_trie_search_fullkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
+    std::cout << "Total Exact Search Time " << duration_trie_search_fullkey.count() << " ms " << std::endl;
+
+    if (found)
+    {
+        std::cout << " " << county_name << " in States: ";
+        for (auto& state : states_found)
+        {
+            std::cout << state << ", ";
+        }
+    }
+    else
+    {
+        std::cout << "Not Found: " << county_name << std::endl;
+    }
+    std::cout << "\nSearch Complete" << endl;
+}
+
+void triePrefixSearch(Trie& countyTrie, std::string& county_prefix)
+{
+    std::cout << "\nPrefix Searching..." << std::endl;
+    std::vector<std::string> matching_counties;
+    auto start_trie_time = std::chrono::high_resolution_clock::now();
+
+    matching_counties = countyTrie.searchPrefix(county_prefix);
+
+    auto end_trie_time = std::chrono::high_resolution_clock::now();
+    auto duration_trie_search_prefixkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
+    std::cout << "Total Prefix Search Time " << duration_trie_search_prefixkey.count() << " ms " << std::endl;
+
+    if (matching_counties.empty())
+    {
+        std::cout << "Not Found: " << county_prefix << std::endl;
+    }
+    else
+    {
+        std::cout << "Matching Counties: " << matching_counties.size() << std::endl;
+        for (auto county : matching_counties)
+        {
+            std::cout << county << std::endl;
+        }
+    }
+    std::cout << "\nSearch Complete" << endl;
+
+}
+
+
+
 int main() {
     std::cout << "Loading dataset..." << std::endl;
     std::vector<CountyData> dataset = loadData("county_demographics.csv");
@@ -154,62 +238,23 @@ int main() {
     //
 
     std::cout << "\n--- Trie Performance ---" << std::endl;
-    Trie countyTrie;
-
-    std::cout << "Testing insertion..." << std::endl;
-    auto start_trie_time = std::chrono::high_resolution_clock::now();
-    for (auto& row : dataset)
-    {
-        countyTrie.insert(row.countyName, row.stateName);
-    }
-    auto end_trie_time = std::chrono::high_resolution_clock::now();
-    auto duration_trie_insert = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
-    std::cout << "Total Insertion Time: " << duration_trie_insert.count() << " ms" << std::endl;
-    std::cout << "Average Insertion Time: " << (double)duration_trie_insert.count() / dataset.size() << " ms" << std::endl;
-
-
-
+    //Use Tree
+    Trie countyTrie = useTrie(dataset);
 
 
     std::cout << "\nTesting Search (Prefix Search and Full countyName search)..." << std::endl;
-    std::string full_key = "Monroe County";
-    std::vector<std::string> states_found;
+    //Search for exact match
+    //In menu user should be able to input county_name
+    std::string county_name = "Monroe County";
+    trieExactSearch(countyTrie, county_name);
 
-    //full key search
-    start_trie_time = std::chrono::high_resolution_clock::now();
-    bool trie_found_fullkey = countyTrie.search(full_key, states_found);
-    end_trie_time = std::chrono::high_resolution_clock::now();
-    auto duration_trie_search_fullkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
-    std::cout << "Total Fullkey Search Time " << duration_trie_search_fullkey.count() << " ms " << std::endl;
-    if (trie_found_fullkey)
-    {
-        std::cout << "Found " << full_key << " in States: ";
-        for (auto& state : states_found)
-        {
-            std::cout << state << ", ";
-        }
-    }
-    else
-    {
-        std::cout << "Not Found: " << full_key << std::endl;
-    }
     //prefix key search
-    std::string prefix_key = "Mon";
-    start_trie_time = std::chrono::high_resolution_clock::now();
-    bool trie_found_prefixkey = countyTrie.hasPrefix(prefix_key);
-    end_trie_time = std::chrono::high_resolution_clock::now();
-    auto duration_trie_search_prefixkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
-    std::cout << "\nTotal Prefixkey Search Time " << duration_trie_search_prefixkey.count() << " ms " << std::endl;
-    if (trie_found_prefixkey)
-    {
-        std::cout << "Found " << prefix_key << std::endl;
-    }
-    else
-    {
-        std::cout << "Not Found: " << prefix_key << std::endl;
-    }
+    //In menu user should be able to input county_prefix
+    std::string county_prefix = "Mon";
+    triePrefixSearch(countyTrie, county_prefix);
 
-
+    //insert
+    //in menu user should be able to input
 
     return 0;
 }

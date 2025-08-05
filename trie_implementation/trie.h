@@ -39,8 +39,9 @@ public:
     }
 
     void insert(string& word, string& state);
-    bool search(string& word, vector<string>& states_outgoing);
-    bool hasPrefix(string& prefix);
+    bool searchFull(string& word, vector<string>& states_outgoing);
+    vector<string> searchPrefix(string& prefix);
+    void findEntries(TrieNode* current, string& prefix, vector<string>& results);
 };
 
 
