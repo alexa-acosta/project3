@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-void Trie::insert(string& word, string& state)
+void Trie::insert(string& word, string& state, string& population)
 {
     TrieNode* current = root;
     for (char ch : word)
@@ -14,32 +14,30 @@ void Trie::insert(string& word, string& state)
         current = current->children[ch];
     }
     current->end_word = true;
-
-    current->states.push_back(state);
+    current->state_populations[state] = population;
 }
 
-
-bool Trie::searchFull(string& word, vector<string>& states_outgoing)
+unordered_map<string, string> Trie::searchFull(string& word)
 {
+    unordered_map<string, string> result;
     TrieNode* current = root;
     for (char ch : word)
     {
         if (current->children.find(ch) == current->children.end())
         {
-            cout << "In Search Fail" << endl;
-            return false;
+            //cout << "In Search Fail" << endl;
+            return result;
         }
         current = current->children[ch];
     }
 
     if (current != nullptr && current->end_word)
     {
-        states_outgoing = current->states;
-        return true;
+        result = current->state_populations;
+        return result;
     }
-    return false;
+    return result;
 }
-
 
 vector<string> Trie::searchPrefix(string& prefix)
 {

@@ -6,11 +6,12 @@
 #include<vector>
 using namespace std;
 
-class TrieNode {
+class TrieNode
+{
 public:
     unordered_map<char, TrieNode*> children;
     bool end_word;
-    vector<string> states;
+    unordered_map<string, string> state_populations;
 
     TrieNode() : end_word(false) {}
 
@@ -38,9 +39,11 @@ public:
         delete root;
     }
 
-    void insert(string& word, string& state);
-    bool searchFull(string& word, vector<string>& states_outgoing);
+    void insert(string& word, string& state, string& population);
+    unordered_map<string, string> searchFull(string& word);
     vector<string> searchPrefix(string& prefix);
+
+    //helper functions
     void findEntries(TrieNode* current, string& prefix, vector<string>& results);
 };
 

@@ -46,6 +46,7 @@ std::vector<CountyData> loadData(const std::string& filename) {
 
     while (std::getline(file, line)) {
         std::stringstream ss(line);
+        std::string cell;
         std::string county, state, population;
         
         std::getline(ss, county, ',');
@@ -53,7 +54,11 @@ std::vector<CountyData> loadData(const std::string& filename) {
 
         std::getline(ss, state, ',');
         state = trim(state);
-
+        //skip to 2020 population data column
+        for (int i = 0; i < 29; i++)
+        {
+            std::getline(ss, cell, ',');
+        }
         std::getline(ss, population, ',');
         population = trim(population);
 
@@ -66,22 +71,20 @@ std::vector<CountyData> loadData(const std::string& filename) {
 }
 
 
-
-
 //
 // Trie Functions
 //
 
-//Inserts CSV Data into a new Trie
+//Inserts CSV Data into a new Trie and returns the Trie
 Trie useTrie(std::vector<CountyData>& dataset)
 {
     Trie countyTrie;
-    std::cout << "Inserting..." << std::endl;
+    std::cout << "Inserting All County Data..." << std::endl;
 
     auto start_trie_time = std::chrono::high_resolution_clock::now();
     for (auto& row : dataset)
     {
-        countyTrie.insert(row.countyName, row.stateName);
+        countyTrie.insert(row.countyName, row.stateName, row.population);
     }
     auto end_trie_time = std::chrono::high_resolution_clock::now();
 
@@ -92,33 +95,48 @@ Trie useTrie(std::vector<CountyData>& dataset)
     return countyTrie;
 }
 
-//Takes in a Trie and county name, returns T/F depending on result of exact search
+//Takes in a Trie and county name, performs exact search, and displays results and time
 void trieExactSearch(Trie& countyTrie, std::string& county_name)
 {
-    std::vector<std::string> states_found;
+    std::unordered_map<std::string, std::string> state_populations;
     std::cout << "Exact Searching..." << std::endl;
 
     auto start_trie_time = std::chrono::high_resolution_clock::now();
-    bool found = countyTrie.searchFull(county_name, states_found);
+    state_populations = countyTrie.searchFull(county_name);
     auto end_trie_time = std::chrono::high_resolution_clock::now();
     auto duration_trie_search_fullkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
     std::cout << "Total Exact Search Time " << duration_trie_search_fullkey.count() << " ms " << std::endl;
 
-    if (found)
+    if (state_populations.empty())
     {
-        std::cout << " " << county_name << " in States: ";
-        for (auto& state : states_found)
-        {
-            std::cout << state << ", ";
-        }
+        std::cout << "Could Not Find: " << county_name << std::endl;
+
     }
     else
     {
-        std::cout << "Not Found: " << county_name << std::endl;
+        std:: cout << "Found Entry(s): " << county_name << std::endl;
+        //put logic here
+        std::cout << "Print Results? (y/n)" << std::endl;
+        char choice;
+        std::cin >> choice;
+
+        if (choice == 'y')
+        {
+            std::cout << "Matching Results: " << state_populations.size() << std::endl;
+            std::cout << "County Populations as of 2020: " << std::endl;
+
+            for (auto& pair : state_populations)
+            {
+                std::string state = pair.first;
+                std::string population = pair.second;
+                std::cout << county_name << ", " << state << ", Population: " << population << std::endl;
+            }
+        }
     }
-    std::cout << "\nSearch Complete" << endl;
+    std::cout << "\nExact Search Complete" << endl;
 }
 
+//Takes in a Trie and county prefix, performs prefix search, and displays results and time
 void triePrefixSearch(Trie& countyTrie, std::string& county_prefix)
 {
     std::cout << "\nPrefix Searching..." << std::endl;
@@ -133,21 +151,52 @@ void triePrefixSearch(Trie& countyTrie, std::string& county_prefix)
 
     if (matching_counties.empty())
     {
-        std::cout << "Not Found: " << county_prefix << std::endl;
+        std::cout << "Could Not Find Entry(s) with Prefix: " << county_prefix << std::endl;
     }
     else
     {
-        std::cout << "Matching Counties: " << matching_counties.size() << std::endl;
-        for (auto county : matching_counties)
+        std:: cout << "Found Entry(s) with Prefix: " << county_prefix << std::endl;
+        //put logic here
+        std::cout << "Print Results? (y/n)" << std::endl;
+        char choice;
+        std::cin >> choice;
+
+        if (choice == 'y')
         {
-            std::cout << county << std::endl;
+            std::cout << "Matching Counties: " << matching_counties.size() << std::endl;
+            for (auto& county : matching_counties)
+            {
+                std::cout << county << std::endl;
+            }
         }
     }
-    std::cout << "\nSearch Complete" << endl;
+    std::cout << "\nPrefix Search Complete" << endl;
 
 }
 
+void trieInsert(Trie& countyTrie)
+{
+    std::string county_insert_name;
+    std::string county_insert_state;
+    std::string county_insert_population;
 
+    cout << "\nPlease input the requested county details" << std::endl;
+    cout << "Enter County Name: " << std::endl;
+    std::getline(std::cin >> std::ws, county_insert_name);
+    cout << "Enter County State: " << std::endl;
+    std::cin >> county_insert_state;
+    cout << "Enter County Population: " << std::endl;
+    std::cin >> county_insert_population;
+    std::cout << "Inserting New County..." << std::endl;
+
+    auto start_trie_time = std::chrono::high_resolution_clock::now();
+    countyTrie.insert(county_insert_name, county_insert_state, county_insert_population);
+    auto end_trie_time = std::chrono::high_resolution_clock::now();
+    auto duration_trie_search_prefixkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
+    std::cout << "Total Insertion Time " << duration_trie_search_prefixkey.count() << " ms " << std::endl;
+    std::cout << "\nInsertion Complete" << endl;
+
+}
 
 int main() {
     std::cout << "Loading dataset..." << std::endl;
@@ -255,6 +304,11 @@ int main() {
 
     //insert
     //in menu user should be able to input
+    trieInsert(countyTrie);
+
+    //test
+    std::string test_county_name = "Example Project County";
+    trieExactSearch(countyTrie, test_county_name);
 
     return 0;
 }
