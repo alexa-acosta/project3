@@ -174,6 +174,7 @@ void triePrefixSearch(Trie& countyTrie, std::string& county_prefix)
 
 }
 
+//Takes in a Trie, and requests user for county data, and inserts a new county and displays time
 void trieInsert(Trie& countyTrie)
 {
     std::string county_insert_name;
@@ -289,7 +290,6 @@ int main() {
     std::cout << "\n--- Trie Performance ---" << std::endl;
     //Use Tree
     Trie countyTrie = useTrie(dataset);
-
 
     std::cout << "\nTesting Search (Prefix Search and Full countyName search)..." << std::endl;
     //Search for exact match
