@@ -72,7 +72,7 @@ std::vector<CountyData> loadData(const std::string& filename) {
 
 void displayMenu()
 {
-    std::cout << "\n=============== Menu ===============" << std::endl;
+    std::cout << "\n=============== Trie vs. Hashmap Menu ===============" << std::endl;
     std::cout << "1. Load dataset from file" << std::endl;
     std::cout << "2. Load into Trie" << std::endl;
     std::cout << "3. Load into Hashmap " << std::endl;
@@ -82,7 +82,7 @@ void displayMenu()
     std::cout << "7. Search for prefix match in Trie" << std::endl;
     std::cout << "8. Search for exact match in Hashmap" << std::endl;
     std::cout << "9. Exit" << std::endl;
-    std::cout << "======================================" << std::endl;
+    std::cout << "=====================================================" << std::endl;
     std::cout << "Please enter a number from 1-9 as your choice: " << std::endl;
 
 }
