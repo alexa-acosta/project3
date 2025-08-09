@@ -26,28 +26,14 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="932b3e7d-f5e5-4d90-a1bc-3cfb8d60c75c" name="Changes" comment="Fully implemented trie class">
-      <change beforePath="$PROJECT_DIR$/.idea/project3.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/project3.iml" afterDir="false" />
+    <list default="true" id="932b3e7d-f5e5-4d90-a1bc-3cfb8d60c75c" name="Changes" comment="Added helper function in main.cpp for ease of menu creation, refactored some trie functions, and created user menu to load, search, and insert with both a Trie and Hashmap">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/cmakeFiles-v1-e3b3afb825d2e0aed264.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/.cmake/api/v1/reply/index-2025-08-04T17-37-48-0463.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_deps" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CMakeDetermineCompilerABI_C.bin" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CMakeDetermineCompilerABI_C.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CMakeDetermineCompilerABI_CXX.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdC/a.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdC/a.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdCXX/a.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.31.6/CompilerIdCXX/a.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeConfigureLog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeConfigureLog.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-Debug-log.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project3.dir/main.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project3.dir/main.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project3.dir/trie_implementation/trie.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/project3.dir/trie_implementation/trie.cpp.obj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/build.ninja" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/build.ninja" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/project3.exe" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/project3.exe" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trie_implementation/trie.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/trie_implementation/trie.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trie_implementation/trie.h" beforeDir="false" afterPath="$PROJECT_DIR$/trie_implementation/trie.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,7 +197,23 @@
       <option name="project" value="LOCAL" />
       <updated>1754692815086</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Added helper function in main.cpp for ease of menu creation, refactored some trie functions, and created user menu to load, search, and insert with both a Trie and Hashmap">
+      <option name="closed" value="true" />
+      <created>1754698165183</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1754698165183</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added helper function in main.cpp for ease of menu creation, refactored some trie functions, and created user menu to load, search, and insert with both a Trie and Hashmap">
+      <option name="closed" value="true" />
+      <created>1754698170057</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1754698170057</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -231,6 +233,7 @@
     <MESSAGE value="Refined main to have more usable Trie functions for menu creation, and updated searchPrefix to return matching entries" />
     <MESSAGE value="Refined main to have more usable Trie functions for menu creation, added insert function in main for menu creation, fixed loadData to properly read population from csv" />
     <MESSAGE value="Fully implemented trie class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fully implemented trie class" />
+    <MESSAGE value="Added helper function in main.cpp for ease of menu creation, refactored some trie functions, and created user menu to load, search, and insert with both a Trie and Hashmap" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added helper function in main.cpp for ease of menu creation, refactored some trie functions, and created user menu to load, search, and insert with both a Trie and Hashmap" />
   </component>
 </project>

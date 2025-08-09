@@ -145,7 +145,7 @@ void trieExactSearch(Trie& countyTrie, std::string& county_name)
             }
         }
     }
-    std::cout << "\nExact Search Complete" << endl;
+    std::cout << "Exact Search Complete" << endl;
 }
 
 //Takes in a Trie and county prefix, performs prefix search, and displays results and time
@@ -182,7 +182,7 @@ void triePrefixSearch(Trie& countyTrie, std::string& county_prefix)
             }
         }
     }
-    std::cout << "\nPrefix Search Complete" << endl;
+    std::cout << "Prefix Search Complete" << endl;
 
 }
 
@@ -207,7 +207,7 @@ void trieInsert(Trie& countyTrie)
     auto end_trie_time = std::chrono::high_resolution_clock::now();
     auto duration_trie_search_prefixkey = std::chrono::duration_cast<std::chrono::milliseconds>(end_trie_time - start_trie_time);
     std::cout << "Total Insertion Time " << duration_trie_search_prefixkey.count() << " ms " << std::endl;
-    std::cout << "\nInsertion Complete" << endl;
+    std::cout << "Insertion Complete" << endl;
 
 }
 
@@ -243,7 +243,7 @@ void hashmapExactSearch(HashMap<std::string, std::string>& countyMap, std::strin
     if (found_existing) {
         std::cout << "Found '" << county_name << "'. State: '" << valueOut << "'. Search took " << duration_search_existing.count() << " us." << std::endl;
     } else {
-        std::cout << "Did not find '" << county_name << "'. Search took " << duration_search_existing.count() << " us. This is incorrect." << std::endl;
+        std::cout << "Did not find '" << county_name << "'. Search took " << duration_search_existing.count() << " us." << std::endl;
     }
 
 }
