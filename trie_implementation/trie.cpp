@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-void Trie::insert(string& word, string& state, string& population)
+void Trie::insert(const string& word, const string& state, const string& population)
 {
     TrieNode* current = root;
     for (char ch : word)
@@ -68,4 +68,9 @@ void Trie::findEntries(TrieNode* current, string& prefix, vector<string>& result
         findEntries(value, prefix, results);
         prefix.pop_back();
     }
+}
+
+bool Trie::isEmpty()
+{
+    return root->children.empty();
 }

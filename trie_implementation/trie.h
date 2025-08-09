@@ -39,12 +39,13 @@ public:
         delete root;
     }
 
-    void insert(string& word, string& state, string& population);
+    void insert(const string& word, const string& state, const string& population);
     unordered_map<string, string> searchFull(string& word);
     vector<string> searchPrefix(string& prefix);
 
     //helper functions
     void findEntries(TrieNode* current, string& prefix, vector<string>& results);
+    bool isEmpty();
 };
 
 

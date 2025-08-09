@@ -70,15 +70,28 @@ std::vector<CountyData> loadData(const std::string& filename) {
     return data;
 }
 
+void displayMenu()
+{
+    std::cout << "\n=============== Menu ===============" << std::endl;
+    std::cout << "1. Load dataset from file" << std::endl;
+    std::cout << "2. Load into Trie" << std::endl;
+    std::cout << "3. Load into Hashmap " << std::endl;
+    std::cout << "4. Insert new Trie entry" << std::endl;
+    std::cout << "5. Insert new Hashmap entry" << std::endl;
+    std::cout << "6. Search for exact match in Trie" << std::endl;
+    std::cout << "7. Search for prefix match in Trie" << std::endl;
+    std::cout << "8. Search for exact match in Hashmap" << std::endl;
+    std::cout << "9. Exit" << std::endl;
+    std::cout << "======================================" << std::endl;
+    std::cout << "Please enter a number from 1-9 as your choice: " << std::endl;
 
-//
+}
+
 // Trie Functions
-//
 
 //Inserts CSV Data into a new Trie and returns the Trie
-Trie useTrie(std::vector<CountyData>& dataset)
+void useTrie(Trie& countyTrie, std::vector<CountyData>& dataset)
 {
-    Trie countyTrie;
     std::cout << "Inserting All County Data..." << std::endl;
 
     auto start_trie_time = std::chrono::high_resolution_clock::now();
@@ -92,14 +105,13 @@ Trie useTrie(std::vector<CountyData>& dataset)
     std::cout << "Total Insertion Time: " << duration_trie_insert.count() << " ms" << std::endl;
     std::cout << "Average Insertion Time: " << (double)duration_trie_insert.count() / dataset.size() << " ms" << std::endl;
 
-    return countyTrie;
 }
 
 //Takes in a Trie and county name, performs exact search, and displays results and time
 void trieExactSearch(Trie& countyTrie, std::string& county_name)
 {
     std::unordered_map<std::string, std::string> state_populations;
-    std::cout << "Exact Searching..." << std::endl;
+    std::cout << "Exact Searching for... '" << county_name << "'" << std::endl;
 
     auto start_trie_time = std::chrono::high_resolution_clock::now();
     state_populations = countyTrie.searchFull(county_name);
@@ -184,7 +196,7 @@ void trieInsert(Trie& countyTrie)
     cout << "\nPlease input the requested county details" << std::endl;
     cout << "Enter County Name: " << std::endl;
     std::getline(std::cin >> std::ws, county_insert_name);
-    cout << "Enter County State: " << std::endl;
+    cout << "Enter County State (Format: XX): " << std::endl;
     std::cin >> county_insert_state;
     cout << "Enter County Population: " << std::endl;
     std::cin >> county_insert_population;
@@ -199,17 +211,10 @@ void trieInsert(Trie& countyTrie)
 
 }
 
-int main() {
-    std::cout << "Loading dataset..." << std::endl;
-    std::vector<CountyData> dataset = loadData("county_demographics.csv");
-    if (dataset.empty()) {
-        std::cerr << "Failed to load data. Exiting." << std::endl;
-        return 1;
-    }
-    std::cout << "Successfully loaded " << dataset.size() << " entries." << std::endl;
+// Hashmap Functions
 
-    std::cout << "\n--- HashMap Performance ---" << std::endl;
-    HashMap<std::string, std::string> countyMap;
+void useHashMap(HashMap<std::string, std::string>& countyMap, std::vector<CountyData>& dataset)
+{
 
     std::cout << "Testing insertion..." << std::endl;
     auto start = std::chrono::high_resolution_clock::now();
@@ -220,95 +225,193 @@ int main() {
     auto duration_insert = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     std::cout << "Total insertion time: " << duration_insert.count() << " ms" << std::endl;
     std::cout << "Average insertion time: " << (double)duration_insert.count() / dataset.size() << " ms per entry" << std::endl;
-    
-    countyMap.printStats();
 
+    countyMap.printStats();
+}
+
+void hashmapExactSearch(HashMap<std::string, std::string>& countyMap, std::string& county_name)
+{
     std::cout << "\nTesting search..." << std::endl;
     std::string valueOut;
-    std::string existingKey = "Alachua County"; 
-    
-    start = std::chrono::high_resolution_clock::now();
-    bool found_existing = countyMap.search(existingKey, valueOut);
-    end = std::chrono::high_resolution_clock::now();
+    std::string existingKey = "Alachua County";
+
+    auto start = std::chrono::high_resolution_clock::now();
+    bool found_existing = countyMap.search(county_name, valueOut);
+    auto end = std::chrono::high_resolution_clock::now();
     auto duration_search_existing = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     if (found_existing) {
-        std::cout << "Found '" << existingKey << "'. Value: '" << valueOut << "'. Search took " << duration_search_existing.count() << " us." << std::endl;
+        std::cout << "Found '" << county_name << "'. State: '" << valueOut << "'. Search took " << duration_search_existing.count() << " us." << std::endl;
     } else {
-        std::cout << "Did not find '" << existingKey << "'. Search took " << duration_search_existing.count() << " us. This is incorrect." << std::endl;
-    }
-    
-    std::string nonExistingKey = "NonExistent County";
-    start = std::chrono::high_resolution_clock::now();
-    bool found_non_existing = countyMap.search(nonExistingKey, valueOut);
-    end = std::chrono::high_resolution_clock::now();
-    auto duration_search_non_existing = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    if (found_non_existing) {
-        std::cout << "Found '" << nonExistingKey << "'. Search took " << duration_search_non_existing.count() << " us. This is incorrect." << std::endl;
-    } else {
-        std::cout << "Did not find '" << nonExistingKey << "'. Search took " << duration_search_non_existing.count() << " us." << std::endl;
+        std::cout << "Did not find '" << county_name << "'. Search took " << duration_search_existing.count() << " us. This is incorrect." << std::endl;
     }
 
-    std::cout << "\nTesting removal..." << std::endl;
-    std::string keyToRemove = "Abbeville County";
-    std::string keyToNotRemove = "Imaginary County";
+}
 
-    start = std::chrono::high_resolution_clock::now();
-    bool removed_existing = countyMap.remove(keyToRemove);
-    end = std::chrono::high_resolution_clock::now();
-    auto duration_remove_existing = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+void hashmapInsert(HashMap<std::string, std::string>& countyMap)
+{
+    std::string county_insert_name;
+    std::string county_insert_state;
 
-    if (removed_existing) {
-        std::cout << "Successfully removed '" << keyToRemove << "'. Removal took " << duration_remove_existing.count() << " us." << std::endl;
-        if (!countyMap.search(keyToRemove, valueOut)) {
-            std::cout << "Verified: '" << keyToRemove << "' is no longer found." << std::endl;
-        } else {
-            std::cout << "Error: '" << keyToRemove << "' was found after removal attempt." << std::endl;
+    cout << "\nPlease input the requested county details" << std::endl;
+    cout << "Enter County Name: " << std::endl;
+    std::getline(std::cin >> std::ws, county_insert_name);
+    cout << "Enter County State (Format: XX): " << std::endl;
+    std::cin >> county_insert_state;
+    std::cout << "Inserting New County..." << std::endl;
+
+    auto start = std::chrono::high_resolution_clock::now();
+
+    countyMap.insert(county_insert_name, county_insert_state);
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration_insert = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Total insertion time: " << duration_insert.count() << " ms" << std::endl;
+}
+
+int main() {
+
+    std::vector<CountyData> dataset;
+    Trie countyTrie;
+    HashMap<std::string, std::string> countyMap;
+
+    int choice = 0;
+
+    while (choice != 9)
+    {
+        displayMenu();
+        std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        switch (choice)
+        {
+            case 1:
+            {
+                dataset = loadData("county_demographics.csv");
+                std::cout << "Loading dataset..." << std::endl;
+                if (!dataset.empty())
+                {
+                    std::cout << "Successfully loaded " << dataset.size() << " entries." << std::endl;
+                }
+                break;
+            }
+            case 2:
+            {
+                if (dataset.empty())
+                {
+                    std::cout << "Dataset is empty. Please load a dataset first." << std::endl;
+                }
+                else
+                {
+                    useTrie(countyTrie, dataset);
+                }
+                break;
+            }
+            case 3:
+            {
+                if (dataset.empty())
+                {
+                    std::cout << "Dataset is empty. Please load a dataset first." << std::endl;
+                }
+                else
+                {
+                    useHashMap(countyMap, dataset);
+
+                }
+                break;
+            }
+            case 4:
+            {
+                if (dataset.empty())
+                {
+                    std::cout << "Dataset is empty. Please load a dataset first." << std::endl;
+                }
+                else
+                {
+                    trieInsert(countyTrie);
+                }
+                break;
+            }
+            case 5:
+            {
+                if (dataset.empty())
+                {
+                    std::cout << "Dataset is empty. Please load a dataset first." << std::endl;
+                }
+                else
+                {
+                    hashmapInsert(countyMap);
+                }
+                break;
+            }
+            case 6:
+            {
+                if (dataset.empty())
+                {
+                    std::cout << "Dataset is empty. Please load a dataset first." << std::endl;
+                }
+                else
+                {
+                    std::string county_name;
+                    std::cout << "Enter County Name (Exact Search): " << std::endl;
+                    std::getline(std::cin, county_name);
+                    trieExactSearch(countyTrie, county_name);
+                }
+                break;
+            }
+            case 7:
+            {
+                if (dataset.empty())
+                {
+                    std::cout << "Dataset is empty. Please load a dataset first." << std::endl;
+                }
+                else
+                {
+                    std::string county_name;
+                    std::cout << "Enter County Prefix (Prefix Search): " << std::endl;
+                    std::getline(std::cin, county_name);
+                    cout << county_name << std::endl;
+                    triePrefixSearch(countyTrie, county_name);
+                }
+                break;
+            }
+            case 8:
+            {
+                if (dataset.empty())
+                {
+                    std::cout << "Dataset is empty. Please load a dataset first." << std::endl;
+                }
+                else
+                {
+                    std::string county_name;
+                    std::cout << "Enter County Name (Exact Search): " << std::endl;
+                    std::getline(std::cin, county_name);
+                    cout << county_name << std::endl;
+                    hashmapExactSearch(countyMap, county_name);
+                }
+                break;
+            }
+            case 9:
+            {
+                std::cout << "Exiting..." << std::endl;
+                break;
+            }
+            case 10:
+            {
+                if (countyTrie.isEmpty()) {
+                    std::cout << "The countyTrie is currently empty." << std::endl;
+                } else {
+                    std::cout << "The countyTrie contains data." << std::endl;
+                }
+                break;
+            }
+            default:
+            {
+                std::cout << "Invalid menu choice, please enter a valid number (1-9) from the menu." << std::endl;
+                break;
+            }
+
         }
-    } else {
-        std::cout << "Failed to remove '" << keyToRemove << "'. Removal took " << duration_remove_existing.count() << " us. This is incorrect." << std::endl;
     }
-
-    start = std::chrono::high_resolution_clock::now();
-    bool removed_non_existing = countyMap.remove(keyToNotRemove);
-    end = std::chrono::high_resolution_clock::now();
-    auto duration_remove_non_existing = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    if (removed_non_existing) {
-        std::cout << "Error: Successfully removed '" << keyToNotRemove << "'. Removal took " << duration_remove_non_existing.count() << " us. This is incorrect." << std::endl;
-    } else {
-        std::cout << "Correctly did not remove '" << keyToNotRemove << "'. Removal took " << duration_remove_non_existing.count() << " us." << std::endl;
-    }
-    
-    countyMap.printStats();
-
-    //
-    // Trie Performance
-    //
-
-    std::cout << "\n--- Trie Performance ---" << std::endl;
-    //Use Tree
-    Trie countyTrie = useTrie(dataset);
-
-    std::cout << "\nTesting Search (Prefix Search and Full countyName search)..." << std::endl;
-    //Search for exact match
-    //In menu user should be able to input county_name
-    std::string county_name = "Monroe County";
-    trieExactSearch(countyTrie, county_name);
-
-    //prefix key search
-    //In menu user should be able to input county_prefix
-    std::string county_prefix = "Mon";
-    triePrefixSearch(countyTrie, county_prefix);
-
-    //insert
-    //in menu user should be able to input
-    trieInsert(countyTrie);
-
-    //test
-    std::string test_county_name = "Example Project County";
-    trieExactSearch(countyTrie, test_county_name);
-
     return 0;
 }
